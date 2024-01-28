@@ -1,15 +1,35 @@
-#要使用管理员权限
-sudo vconfig add eth1
-sudo vconfig add eth2
-sudo vconfig add eth3
-sudo vconfig add eth4
+#在csdn网络技能树学到配置vlan基本属性：
+#先进入系统视图
+system-view
+#然后创建vlan（好像可以批量创建）
+vlan {1 to 4}
+#进入vlan视图
+vlan 1
+#命名
+name "1"
+#vlan 2-4同理
+#创建vlan接口并进入vlan接口视图
+interface vlan-interface 0.1
+#配置vlan接口的ip地址，0.2-0.4同理
+ip address 10.18.0.1
+#技能树到这里就没有了，不过这些命令怎么看怎么奇怪，我去执行了一下，发现执行不了
+#于是我舍弃了技能树去查了下如何使用脚本来配置就是下面这些啦！
+--------------------------------
+#要使用管理员权限分配物理接口；不知道为什么看到的eth都是零点几
+sudo vconfig add eth0.1
+sudo vconfig add eth0.2
+sudo vconfig add eth0.3
+sudo vconfig add eth0.4
 #为每个VLAN分配IP地址
-sudo ifconfig eth1 10.18.0.1 netmask 255.240.0.0 up
-sudo ifconfig eth2 202.202.32.1 netmask 255.255.240.0 up
-sudo ifconfig eth3 219.153.62.65 netmask 255.255.255.192 up
-sudo ifconfig eth4 222.177.140.1 netmask 255.255.255.128 up
-#添加静态路由
-sudo ip route add 10.18.0.0/12 via 10.18.0.1 dev eth1
-sudo ip route add 202.202.32.0/20 via 202.202.32.1 dev eth2
-sudo ip route add 219.153.62.64/26 via 219.153.62.65 dev eth3
-sudo ip route add 222.177.140.0/25 via 222.177.140.1 dev eth4
+sudo ifconfig eth0.1 10.18.0.1 netmask 255.240.0.0 up
+#这里去查了一下意思是临时修改ip生效
+#还有一个命令ifconfig eth0:1 192.178.0.3 netmask 255.255.255.0是临时增加ip
+sudo ifconfig eth0.2 202.202.32.1 netmask 255.255.240.0 up
+sudo ifconfig eth0.3 219.153.62.65 netmask 255.255.255.192 up
+sudo ifconfig eth0.4 222.177.140.1 netmask 255.255.255.128 up
+#添加静态路由以访问其他路段
+sudo ip route add 10.18.0.0/12 via 10.18.0.1 dev eth0.1
+sudo ip route add 202.202.32.0/20 via 202.202.32.1 dev eth0.2
+sudo ip route add 219.153.62.64/26 via 219.153.62.65 dev eth0.3
+sudo ip route add 222.177.140.0/25 via 222.177.140.1 dev eth0.4
+#以上就是这几天看这道题的所有思路历程啦！看csdn技能树用了好几天，主要学到了一些抽象的理论知识，不知道为什么它给的命令用不了
