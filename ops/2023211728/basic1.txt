@@ -22,7 +22,7 @@ sudo vconfig add eth0.3
 sudo vconfig add eth0.4
 #为每个VLAN分配IP地址
 sudo ifconfig eth0.1 10.18.0.1 netmask 255.240.0.0 up
-#这里去查了一下意思是临时修改ip生效
+#这里去查了一下意思是临时修改ip生效，后面的255.240.0.0是一个c类子网掩码指出它能处理的主机数
 #还有一个命令ifconfig eth0:1 192.178.0.3 netmask 255.255.255.0是临时增加ip
 sudo ifconfig eth0.2 202.202.32.1 netmask 255.255.240.0 up
 sudo ifconfig eth0.3 219.153.62.65 netmask 255.255.255.192 up
