@@ -6,10 +6,10 @@ sudo vconfig add eth 0.6
 sudo vconfig add eth 0.7
 sudo vconfig add eth 0.8
 sudo vconfig add eth 0.9
-sudo ifconfig eth0.6 192.168.6.1 netmask 255.255.255.0 up
-sudo ifconfig eth0.7 192.168.7.1 netmask 255.255.255.0 up
-sudo ifconfig eth0.8 192.168.8.1 netmask 255.255.255.0 up
-sudo ifconfig eth0.9 192.168.9.1 netmask 255.255.255.0 up
+sudo ifconfig eth0.6 192.168.6.1 netmask 172.18.100.1 up
+sudo ifconfig eth0.7 192.168.7.1 netmask 172.18.100.1 up
+sudo ifconfig eth0.8 192.168.8.1 netmask 172.18.100.1 up
+sudo ifconfig eth0.9 192.168.9.1 netmask 172.18.100.1 up
 # 静态路由配置
 sudo ip route add 192.168.6.0/24 via 192.168.6.1 dev eth0.6
 sudo ip route add 192.168.7.0/24 via 192.168.7.1 dev eth0.7
