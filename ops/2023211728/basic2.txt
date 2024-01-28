@@ -1,4 +1,5 @@
 #这个跟第一问用到的命令差不多
+#将脚本命名为network.sh
 #在十台虚拟机中分别进行如下配置
 #!/bin/bash
 # VLAN配置
@@ -16,6 +17,11 @@ sudo ip route add 192.168.7.0/24 via 192.168.7.1 dev eth0.7
 sudo ip route add 192.168.8.0/24 via 192.168.8.1 dev eth0.8
 sudo ip route add 192.168.9.0/24 via 192.168.9.1 dev eth0.9
 sudo ip route add default via 192.168.6.1 dev eth0.6
-
+#保存退出后将其变为可执行文件
+chmod +x network.sh
+#用crontab来定期运行该脚本
+crontab -e
+#进入编辑后输入
+@reboot /home/network.sh
 ~                                                                                                                                                                                                             
 ~                                                       
