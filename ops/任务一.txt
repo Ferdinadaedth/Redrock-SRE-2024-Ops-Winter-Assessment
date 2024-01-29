@@ -1,0 +1,15 @@
+#按照题目，vlan id是已经创建好了的，由于有四个网段，所以这里我们自定义创建好的vlan id分别为：eth0.1、eth0.2、eth0.3、eth0.4，为每个vlan接口分配一个网段ip
+ip addr add 10.18.0.1/12 dev eth0.1
+ip addr add 202.202.32.1/20 dev eth0.2
+ip addr add 219.153.62.65/26 dev eth0.3
+ip addr add 222.177.140.1/25 dev eth0.4
+#把配置好的接口启动一下
+ip link set dev eth0.1 up
+ip link set dev eth0.2 up
+ip link set dev eth0.3 up
+ip link set dev eth0.4 up
+#但是要访问其他网段还要配置一下路由，将目标网络添加到路由表中，并指定下一跳的ip地址为他自己的局域网172.18.100.1，当数据包的目标 IP 地址匹配到这个目标网络时，那么操作系统将数据包发送给他的局域网，这样就可以实现访问其他网段数据
+ip route add 10.18.0.0/12 via 172.18.100.1
+ip route add 202.202.32.0/20 via 172.18.100.1
+ip route add 219.153.62.64/26 via 172.18.100.1
+ip route add 222.177.140.0/25 via 172.18.100.1
