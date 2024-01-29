@@ -12,11 +12,11 @@ sudo ifconfig eth0.7 192.168.7.1 netmask 172.18.100.1 up
 sudo ifconfig eth0.8 192.168.8.1 netmask 172.18.100.1 up
 sudo ifconfig eth0.9 192.168.9.1 netmask 172.18.100.1 up
 # 静态路由配置
-sudo ip route add 192.168.6.0/24 via 192.168.6.1 dev eth0.6
-sudo ip route add 192.168.7.0/24 via 192.168.7.1 dev eth0.7
-sudo ip route add 192.168.8.0/24 via 192.168.8.1 dev eth0.8
-sudo ip route add 192.168.9.0/24 via 192.168.9.1 dev eth0.9
-sudo ip route add default via 192.168.6.1 dev eth0.6
+sudo ip route add 192.168.6.0/24 via  172.18.100.1  dev eth0.6
+sudo ip route add 192.168.7.0/24 via  172.18.100.1  dev eth0.7
+sudo ip route add 192.168.8.0/24 via  172.18.100.1  dev eth0.8
+sudo ip route add 192.168.9.0/24 via  172.18.100.1  dev eth0.9
+sudo ip route add default via  172.18.100.1  dev eth0.6
 #保存退出后将其变为可执行文件
 chmod +x network.sh
 #用crontab来定期运行该脚本
