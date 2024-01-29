@@ -1,60 +1,36 @@
-1.先进行OpenWRT软路由配置
-在OpenWRT上创建一个新的VLAN接口，将它作为DHCP客户端以从校园网获取IP地址，再为其他网段添加静态路由，操作如下：
-#创建VLAN接口
-uci set network.vlan1='interface'
-uci set network.vlan1.ifname='eth0.2' # 假设eth0是连接到校园网的物理接口，2是VLAN ID
-uci set network.vlan1.proto='dhcp'
-
-#保存并应用配置
-uci commit network
-/etc/init.d/network reload
-
-#添加静态路由
+任务一
+#按照题目，vlan id是已经创建好了的，由于有四个网段，所以这里我们自定义创建好的vlan id分别为：eth0.1、eth0.2、eth0.3、eth0.4，为每个vlan接口分配一个网段ip
+ip addr add 10.18.0.1/12 dev eth0.1
+ip addr add 202.202.32.1/20 dev eth0.2
+ip addr add 219.153.62.65/26 dev eth0.3
+ip addr add 222.177.140.1/25 dev eth0.4
+#把配置好的接口启动一下
+ip link set dev eth0.1 up
+ip link set dev eth0.2 up
+ip link set dev eth0.3 up
+ip link set dev eth0.4 up
+#但是要访问其他网段还要配置一下路由，将目标网络添加到路由表中，并指定下一跳的ip地址为他自己的局域网172.18.100.1，当数据包的目标 IP 地址匹配到这个目标网络时，那么操作系统将数据包发送给他的局域网，这样就可以实现访问其他网段数据
 ip route add 10.18.0.0/12 via 172.18.100.1
 ip route add 202.202.32.0/20 via 172.18.100.1
 ip route add 219.153.62.64/26 via 172.18.100.1
 ip route add 222.177.140.0/25 via 172.18.100.1
 
-#保存路由配置到启动脚本
-echo "ip route add 10.18.0.0/12 via 172.18.100.1" >> /etc/rc.local
-echo "ip route add 202.202.32.0/20 via 172.18.100.1" >> /etc/rc.local
-echo "ip route add 219.153.62.64/26 via 172.18.100.1" >> /etc/rc.local
-echo "ip route add 222.177.140.0/25 via 172.18.100.1" >> /etc/rc.local
 
-2.配置服务器和网关
-网关机：
-在网关机中配置NAT和防火墙规则，以及设置虚拟机的网络接口
-#启用IP转发
-echo 1 > /proc/sys/net/ipv4/ip_forward
+任务二
+网络配置脚本（net.sh）写进脚本里面的时候把我的注释删了就行：
+#创建好的10台虚拟机要能够上网，并且网关机是同一个，在网关机上创建一个虚拟网桥，把这10台虚拟机连接到网桥上，学习了一下怎么创建网桥，随便给网桥取个名叫brhsh0
+#!/bin/bash
+brctl addbr brhsh0
+brctl addif brhsh0 eth0
+ip link set dev brhsh0 up
+#题目还要求网络环境要和原来网络环境隔离，在网上搜索了一下，说是只要配置 iptables 规则就可以实现新网段流量无法进入旧网段，学习了一下iptables的一些命令及规则-A FORWARD可以处理转发的数据包，-s ip是源ip的数据包，-d ip是目标ip的数据包，-j DROP是丢弃数据包，那么只需要丢弃相互转发时的数据包就可以实现新网段流量无法进入旧网段
+iptables -A FORWARD -s 192.168.5.0/24 -d 172.18.100.0/24 -j DROP
+iptables -A FORWARD -s 172.18.100.0/24 -d 192.168.5.0/24 -j DROP
 
-#设置NAT
-iptables -t nat -A POSTROUTING -s 192.168.5.0/24 -o eth0 -j MASQUERADE
+开机自启脚本（selfstart.sh）假设两个脚本都保存在/mynet目录下:
+#!/bin/bash
+sh /mynet/net.sh
 
-#设置防火墙规则以隔离新旧网段
-iptables -A FORWARD -i eth1 -o eth0 -s 192.168.5.0/24 -d 172.18.100.0/24 -j REJECT
-iptables -A FORWARD -i eth0 -o eth1 -s 172.18.100.0/24 -d 192.168.5.0/24 -j REJECT
-
-#保存iptables规则
-iptables-save > /etc/iptables/rules.v4
-
-#创建开机自启脚本
-echo "#!/bin/sh -e" > /etc/rc.local
-echo "echo 1 > /proc/sys/net/ipv4/ip_forward" >> /etc/rc.local
-echo "iptables-restore < /etc/iptables/rules.v4" >> /etc/rc.local
-echo "exit 0" >> /etc/rc.local
-chmod +x /etc/rc.local
-
-配置虚拟网络（每台虚拟机的/etc/network/interfaces文件中的IP地址是唯一的，并且在192.168.5.2到192.168.5.11的范围内。）：
-#编辑网络配置文件 /etc/network/interfaces
-auto eth0
-iface eth0 inet static
-    address 192.168.5.X # X是2到11之间的数字
-    netmask 255.255.255.0
-    gateway 192.168.5.5 # 假设192.168.5.5是网关机的IP地址
-
-每次修改配置后重启网络服务或虚拟机以应用新的设置：
-#重启网络服务
-/etc/init.d/networking restart
-
-#重启特定网络接口
-ifdown eth0 && ifup eth0
+#把两个脚本都赋予一下可执行权限后，将selfstart.sh添加到 /etc/rc.local里面就行（sh /mynet/selfstart.sh）
+chmod +x /mynet/net.sh
+chmod +x /mynet/selfstart.sh
