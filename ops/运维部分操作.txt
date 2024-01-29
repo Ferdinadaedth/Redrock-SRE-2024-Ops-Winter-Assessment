@@ -34,3 +34,4 @@ sh /mynet/net.sh
 #把两个脚本都赋予一下可执行权限后，将selfstart.sh添加到 /etc/rc.local里面就行（sh /mynet/selfstart.sh）
 chmod +x /mynet/net.sh
 chmod +x /mynet/selfstart.sh
+注意，需要要在管理员权限下进行以上操作
