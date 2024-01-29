@@ -23,8 +23,8 @@ sudo vconfig add eth0.3
 sudo vconfig add eth0.4
 #为每个VLAN分配IP地址
 sudo ifconfig eth0.1 10.18.0.1 netmask 255.240.0.0 up
-#这里去查了一下意思是临时修改ip生效，后面的255.240.0.0是一个c类子网掩码指出它能处理的主机数
-#还有一个命令ifconfig eth0:1 192.178.0.3 netmask 255.255.255.0是临时增加ip
+#这里去查了一下意思是，将名为eth0.2的网络接口的IP地址设置为202.202.32.1，子网掩码设置为255.255.240.0，并启用该网络接口
+#不过题目已经给出了网段，不知道为什么还要设置一下子网掩码呢
 sudo ifconfig eth0.2 202.202.32.1 netmask 255.255.240.0 up
 sudo ifconfig eth0.3 219.153.62.65 netmask 255.255.255.192 up
 sudo ifconfig eth0.4 222.177.140.1 netmask 255.255.255.128 up
