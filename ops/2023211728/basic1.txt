@@ -29,8 +29,9 @@ sudo ifconfig eth0.2 202.202.32.1 netmask 255.255.240.0 up
 sudo ifconfig eth0.3 219.153.62.65 netmask 255.255.255.192 up
 sudo ifconfig eth0.4 222.177.140.1 netmask 255.255.255.128 up
 #添加静态路由以访问其他路段
-sudo ip route add 10.18.0.0/12 via 10.18.0.1 dev eth0.1
-sudo ip route add 202.202.32.0/20 via 202.202.32.1 dev eth0.2
-sudo ip route add 219.153.62.64/26 via 219.153.62.65 dev eth0.3
-sudo ip route add 222.177.140.0/25 via 222.177.140.1 dev eth0.4
+sudo ip route add 10.18.0.0/12 via 172.18.100.1 dev eth0.1
+sudo ip route add 202.202.32.0/20 via 172.18.100.1 dev eth0.2
+sudo ip route add 219.153.62.64/26 via 172.18.100.1 dev eth0.3
+sudo ip route add 222.177.140.0/25 via 172.18.100.1 dev eth0.4
+#via前后分别是目标网络和下一跳网关ip
 #以上就是这几天看这道题的所有思路历程啦！看csdn技能树用了好几天，主要学到了一些抽象的理论知识，不知道为什么它给的命令用不了
