@@ -7,6 +7,8 @@ ip link set dev brhsh0 up
 #题目还要求网络环境要和原来网络环境隔离，在网上搜索了一下，说是只要配置 iptables 规则就可以实现新网段流量无法进入旧网段，学习了一下iptables的一些命令及规则-A FORWARD可以处理转发的数据包，-s ip是源ip的数据包，-d ip是目标ip的数据包，-j DROP是丢弃数据包，那么只需要丢弃相互转发时的数据包就可以实现新网段流量无法进入旧网段
 iptables -A FORWARD -s 192.168.5.0/24 -d 172.18.100.0/24 -j DROP
 iptables -A FORWARD -s 172.18.100.0/24 -d 192.168.5.0/24 -j DROP
+#要新流量能够进入网关机实现上网这里可以配置一个nat，利用MASQUERADE操作，使得数据包在经过网关机时，虚拟机ip被替换为网关机ip，实现nat转换
+iptables -t nat -A POSTROUTING -s 192.168.5.0/24 -o eth0 -j MASQUERADE
 
 开机自启脚本（selfstart.sh）假设两个脚本都保存在/mynet目录下:
 #!/bin/bash
