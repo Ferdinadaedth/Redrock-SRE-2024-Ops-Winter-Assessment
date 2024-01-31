@@ -9,6 +9,10 @@ sudo ovs-vsctl add-port br0 eth0
 for i in {2..11}; do
     sudo ifconfig eth0:$i 192.168.5.$i netmask 255.255.255.0 up
 done
+#分配了ip应该就可以上网了吧
+#接下来是隔离网段，查找后发现可以用防火墙规则来实现
+#插入规则拒绝来自IP地址为192.168.5.（2-11）的数据包
+iptables -I INPUT -s 192.168.5.0/12 -j REJECT
 #保存退出后将其变为可执行文件
 chmod +x network.sh
 #用crontab来定期运行该脚本
