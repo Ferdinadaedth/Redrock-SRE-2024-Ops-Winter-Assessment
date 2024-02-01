@@ -1,0 +1,46 @@
+#在csdn网络技能树学到配置vlan基本属性：
+#先进入系统视图
+system-view
+#然后创建vlan（好像可以批量创建）
+vlan {1 to 4}
+#进入vlan视图
+vlan 1
+#命名
+name "1"
+#vlan 2-4同理
+#创建vlan接口并进入vlan接口视图
+interface vlan-interface 0.1
+#配置vlan接口的ip地址，0.2-0.4同理
+ip address 10.18.0.1
+#技能树到这里就没有了，不过这些命令怎么看怎么奇怪，我去执行了一下，发现执行不了
+#于是我舍弃了技能树去查了下如何使用脚本来配置就是下面这些啦！
+--------------------------------
+#将脚本命名为net.sh
+#要使用管理员权限分配物理接口；不知道为什么看到的eth都是零点几
+sudo vconfig add eth0.1
+sudo vconfig add eth0.2
+sudo vconfig add eth0.3
+sudo vconfig add eth0.4
+#为每个VLAN分配IP地址
+sudo ifconfig eth0.1 10.18.0.1 netmask 255.240.0.0 up
+#这里去查了一下意思是，将名为eth0.2的网络接口的IP地址设置为202.202.32.1，子网掩码设置为255.255.240.0，并启用该网络接口
+#不过题目已经给出了网段，不知道为什么还要设置一下子网掩码呢
+sudo ifconfig eth0.2 202.202.32.1 netmask 255.255.240.0 up
+sudo ifconfig eth0.3 219.153.62.65 netmask 255.255.255.192 up
+sudo ifconfig eth0.4 222.177.140.1 netmask 255.255.255.128 up
+-----------------------------------------------------------------#突然发现上述是Linux系统创建vlan的命令，题目要求是openwrt系统。。。
+#发现了uci命令可以用于openwrt配置接口
+#设置一个网络接口
+uci set network.vlan1='interface'
+#将网络接口与物理接口联系
+uci set network.vlan1.ifname='eth0.1'#小数点前面的eth0是物理接口，后面是vlan ID
+#经提示才注意到题目中的dhcp也有讲究，需要设置接口的网络协议为dhcp
+uci set network.vlan1.proto='dhcp'
+#添加静态路由以访问其他路段
+sudo ip route add 10.18.0.0/12 via 172.18.100.1 dev eth0.1
+sudo ip route add 202.202.32.0/20 via 172.18.100.1 dev eth0.2
+sudo ip route add 219.153.62.64/26 via 172.18.100.1 dev eth0.3
+sudo ip route add 222.177.140.0/25 via 172.18.100.1 dev eth0.4
+#via前后分别是目标网络和下一跳网关ip
+#总结一下设置网络接口的基本步骤：1.创建网络接口 2.给网络接口分配物理接口 3.设置接口网络协议 4.设置路由
+#以上就是这几天看这道题的所有思路历程啦！看csdn技能树用了好几天，主要学到了一些抽象的理论知识，不知道为什么它给的命令用不了
