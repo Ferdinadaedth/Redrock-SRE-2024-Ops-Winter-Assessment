@@ -1,0 +1,30 @@
+#泉哥提示到由openwrt接入，先学了一下openwrt的uci语法，我们先配置一个vlan接口，先增加一个节点，然后为节点增加选项和值，这里定义接口名为vlan1
+uci set network.vlan1="interface"
+uci set network.vlan1.type="bridge"
+uci set network.vlan1.proto="dhcp"
+uci set network.vlan1.ifname="eth0.1"
+#把定义好的接口添加到网段列表，即可将接口添加到网段中
+uci add_list network.lan.ifname="eth0.1"
+#为每一个网段都添加此接口（利用ipv4路由），官方文档中规定接口名和目标ip是必须的，但是这里目标ip不是本机，所以网络掩码应该由目标ip推算，题目已经指定了网关机
+uci add network route
+uci set network.@route[-1].interface="vlan1"
+uci set network.@route[-1].target="10.18.0.0"
+uci set network.@route[-1].netmask="255.240.0.0"
+uci set network.@route[-1].gateway="172.18.100.1"
+uci add network route
+uci set network.@route[-1].interface="vlan1"
+uci set network.@route[-1].target="202.202.32.0"
+uci set network.@route[-1].netmask="255.255.240.0"
+uci set network.@route[-1].gateway="172.18.100.1"
+uci add network route
+uci set network.@route[-1].interface="vlan1"
+uci set network.@route[-1].target="219.153.62.64"
+uci set network.@route[-1].netmask="255.255.255.192"
+uci set network.@route[-1].gateway="172.18.100.1"
+uci add network route
+uci set network.@route[-1].interface="vlan1"
+uci set network.@route[-1].target="222.177.140.0"
+uci set network.@route[-1].netmask="255.255.255.128"
+uci set network.@route[-1].gateway="172.18.100.1"
+#最后提交保存一下修改，不然修改都只是存在缓存里
+uci commit network
