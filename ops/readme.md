@@ -102,7 +102,9 @@ setup_firewall() {
 # 防火墙和网桥设置持久化函数
 persist_settings() {
     # 将NAT和防火墙配置写入rc.local
-    echo "setup_firewall" >> /etc/rc.local
+    echo "iptables -t nat -A POSTROUTING -o $EXTERNAL_INTERFACE -j MASQUERADE" >> /etc/rc.local
+    echo "iptables -A FORWARD -i $VM_BRIDGE -o $EXTERNAL_INTERFACE -j ACCEPT" >> /etc/rc.local
+    echo "iptables -A FORWARD -o $VM_BRIDGE -i $EXTERNAL_INTERFACE -m state --state RELATED,ESTABLISHED -j ACCEPT" >> /etc/rc.local
     # 将网桥配置写入rc.local
     echo "ip link add name $VM_BRIDGE type bridge" >> /etc/rc.local
     echo "ip addr add $VM_GATEWAY/$VM_NETMASK dev $VM_BRIDGE" >> /etc/rc.local
