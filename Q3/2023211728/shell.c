@@ -46,30 +46,8 @@ void mysh(char *cmd) {
 	}
 	if (pid == 0) {
 		int fd=-1;
-		if (strstr(cmd, ">") != NULL) {
-			char *redir = strstr(cmd, ">");
-			*redir = '\0';
-			redir += 1;
-			fd = open(redir, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (fd == -1) {
-				perror("open");
-				return;
-			}
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-		} else if (strstr(cmd, ">>") != NULL) {
-			char *redir = strstr(cmd, ">>");
-			*redir = '\0';
-			redir += 2;
-			fd = open(redir, O_WRONLY | O_CREAT , 0644);
-			if (fd == -1) {
-				perror("open");
-				return;
-			}
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-		} else if (strstr(cmd, "&>>") != NULL) {
-			char *redir = strstr(cmd, "&>>");
+		if (strstr(cmd, "2>>") != NULL) {
+			char *redir = strstr(cmd, "2>>");
 			*redir = '\0';
 			redir += 3;
 			fd = open(redir, O_WRONLY | O_CREAT , 0644);
@@ -77,13 +55,13 @@ void mysh(char *cmd) {
 				perror("open");
 				return;
 			}
-			dup2(fd, STDOUT_FILENO);
+			dup2(fd, STDERR_FILENO);
 			close(fd);
-		} else if (strstr(cmd, "&>") != NULL) {
-			char *redir = strstr(cmd, "&>");
+		} else if (strstr(cmd, "&>>") != NULL) {
+			char *redir = strstr(cmd, "&>>");
 			*redir = '\0';
-			redir += 2;
-			fd = open(redir, O_WRONLY | O_CREAT, 0644);
+			redir += 3;
+			fd = open(redir, O_WRONLY | O_CREAT , 0644);
 			if (fd == -1) {
 				perror("open");
 				return;
@@ -101,18 +79,44 @@ void mysh(char *cmd) {
 			}
 			dup2(fd, STDERR_FILENO);
 			close(fd);
-		} else if (strstr(cmd, "2>>") != NULL) {
-			char *redir = strstr(cmd, "2>>");
+		} else if (strstr(cmd, "&>") != NULL) {
+			char *redir = strstr(cmd, "&>");
 			*redir = '\0';
-			redir += 3;
+			redir += 2;
+			fd = open(redir, O_WRONLY | O_CREAT, 0644);
+			if (fd == -1) {
+				perror("open");
+				return;
+			}
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		} else if (strstr(cmd, ">>") != NULL) {
+			char *redir = strstr(cmd, ">>");
+			*redir = '\0';
+			redir += 2;
 			fd = open(redir, O_WRONLY | O_CREAT , 0644);
 			if (fd == -1) {
 				perror("open");
 				return;
 			}
-			dup2(fd, STDERR_FILENO);
+			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}
+
+		else if (strstr(cmd, ">") != NULL) {
+			char *redir = strstr(cmd, ">");
+			*redir = '\0';
+			redir += 1;
+			fd = open(redir, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (fd == -1) {
+				perror("open");
+				return;
+			}
+			dup2(fd, STDOUT_FILENO);
+			close(fd);
+		}
+
+
 		if ((cmdp = strstr(cmd, "ls")) != NULL) {
 			if (execl("/home/yt/桌面/indoor/ls", "ls", NULL) < 0) {
 				perror("execl");
