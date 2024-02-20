@@ -115,6 +115,15 @@ void mysh(char *cmd) {
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}
+		else if (strstr(cmd, "./") != NULL) {
+                        char *redir = strstr(cmd, "./");
+                        *redir = '\0';
+                        redir += 2;
+                        if (execv(redir, NULL) < 0) {
+                        perror("execv");
+                        return;
+            }
+        }
 
 
 		if ((cmdp = strstr(cmd, "ls")) != NULL) {
