@@ -1,5 +1,6 @@
 #include "head.h"
 
+
 // 判断cd命令输入的参数个数是否合法
 bool argumentNum(char *cmd, int num, char *tips) {
     int arg = 0;
@@ -38,15 +39,23 @@ void mycd(char *cmd) {
 // 子进程调用sh来执行其他函数ls ps等
 void mysh(char *cmd) {
     pid_t pid; //在父进程中，fork返回新创建子进程的进程ID；在子进程中，fork返回0；如果出现错误，fork返回一个负值；
+    char *cmdp = NULL;
     if ((pid = fork()) < 0) {
         perror("fork");
         return;
     }
     if (pid == 0) {
-        if (execl("/bin/sh", "sh", "-c", cmd, NULL) < 0) {
+    if ((cmdp = strstr(cmd, "ls")) != NULL) {
+        if (execl("/home/yt/桌面/indoor/ls", "ls", NULL) < 0) {
             perror("execl");
             return;
+            }
         }
+ 
+     else if ((cmdp = strstr(cmd, "mkdir")) != NULL){
+             execl("/home/yt/桌面/indoor/mkdir", "mkdir",cmd , NULL);
+             return;
+     }
     } else {
         wait(NULL); //等待子进程结束，这个wait还蛮重要的，避免了“僵尸进程”和“孤儿进程”
         return;
@@ -104,7 +113,9 @@ int main(int argc, char **argv) {
             if (argumentNum(cmd, 1, "cd dirname")) {
                 mycd(cmd);
             } else continue;
-        } else {
+        } else if ((cmdp = strstr(cmd, "exit")) != NULL) {
+            exit(0);
+        }else {
             if (strstr(cmd, "2>") != NULL) type = 5;
             else if (strstr(cmd, ">>") != NULL) type = 4;
             else if (strstr(cmd, "&>>") != NULL) type = 4;//>>和&>>都是追加模式的重定向操作，type相同
