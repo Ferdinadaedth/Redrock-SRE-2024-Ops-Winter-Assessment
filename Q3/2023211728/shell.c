@@ -36,7 +36,7 @@ void mycd(char *cmd) {
     return;
 }
 
-// 子进程调用sh来执行其他函数ls ps等
+// 子进程调用sh来执行外置函数
 void mysh(char *cmd) {
     pid_t pid; //在父进程中，fork返回新创建子进程的进程ID；在子进程中，fork返回0；如果出现错误，fork返回一个负值；
     char *cmdp = NULL;
