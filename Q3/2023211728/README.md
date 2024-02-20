@@ -25,7 +25,7 @@ exit：
 
 ./:
 
-![](C:\Users\34978\Pictures\Screenshots\屏幕截图 2024-02-20 193010.png)
+![image](https://github.com/ytqwerasdf/Redrock-SRE-2024-Ops-Winter-Assessment/blob/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-02-20%20193010.png)
 
 重定向：
 
@@ -44,5 +44,5 @@ exit：
 
 6.使用mkdir时创建的文件夹会带有“mkdir”
 
-![](C:\Users\34978\Pictures\Screenshots\屏幕截图 2024-02-20 192233.png)![image](https://github.com/ytqwerasdf/Redrock-SRE-2024-Ops-Winter-Assessment/blob/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-02-20%20193010.png)
+
 
