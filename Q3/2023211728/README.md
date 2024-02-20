@@ -1,7 +1,7 @@
 实现命令：
 pwd：
 
-![](C:\Users\34978\Pictures\Screenshots\屏幕截图 2024-02-19 211023.png)
+![](https://github.com/ytqwerasdf/Redrock-SRE-2024-Ops-Winter-Assessment/blob/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-02-19%20211100.png)
 
 ls：
 
@@ -9,7 +9,7 @@ ls：
 
 cd：
 
-![](C:\Users\34978\Pictures\Screenshots\屏幕截图 2024-02-19 211100.png)
+![](https://github.com/ytqwerasdf/Redrock-SRE-2024-Ops-Winter-Assessment/blob/main/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202024-02-19%20211100.png)
 
 
 
