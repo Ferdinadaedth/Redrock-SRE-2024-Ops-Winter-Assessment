@@ -98,7 +98,7 @@ python docker-compose.py
 
 `test.py`是用于在编写`check_health`函数之前，查看`health`值位置的工具。
 
-最后用`controller.py`在后台调用`healthcheck.py`，并在结束本进程之前停止`healthcheck.py`的进程（也许偶尔会失败，需要手动`kill`一下）
+最后用`controller.py`在后台调用`healthcheck.py`，并在结束本进程之前停止`healthcheck.py`的进程。一开始打算使用subprocess库，但是好像因为没有处理好输入输出，导致运行不了，最终使用os库实现了，但是偶尔会没有杀死`healthcheck.py`的进程，需要手动`kill`一下。
 
 ## 使用方式
 
