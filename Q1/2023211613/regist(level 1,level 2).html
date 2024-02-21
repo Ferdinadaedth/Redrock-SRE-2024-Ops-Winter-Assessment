@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style/login.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <form action="login2Servlet" method="post" id="form" name="addForm">
+        <p>欢迎注册</p>
+
+        <div class="item">
+            <img src="style/账号.svg" alt="">
+            <input type="text" name="username" placeholder="账号">
+        </div>
+        <div class="item">
+            <img src="style/密码.svg" alt="">
+            <input type="password" name="password" placeholder="密码">
+        </div>
+        <p style="color: red;font-size: 12px;margin: 0">${user}</p>
+        <input class="submit" type="button" value="注册" onclick="submitForm()">
+        <!-- <button type="button" form="form" onclick="submitForm()">注册</button> -->
+        <input type="checkbox" id="checkbox">
+        <div class="jur"> 已阅读并同意 <span>《用户服务协议》</span>和 <span>《隐私政策》</span></div>
+
+        <a href="login.jsp">已有账号，去登录</a>
+
+
+    </form>
+</div>
+
+</body>
+</html>
